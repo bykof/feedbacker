@@ -4,7 +4,8 @@ import { Redirect } from 'react-router-dom';
 
 import JoinFeedbackGroupForm from '../../components/JoinFeedbackGroupForm';
 import CreateFeedbackGroupLink from '../../components/CreateFeedbackGroupLink';
-import LoadingSpinner from '../../components/LoadingSpinner';
+import Loading from '../../components/Loading';
+
 import { FEEDBACKGROUP_PATH } from '../../router/paths';
 import { resetFeedbackGroupForm } from '../../redux/actions';
 
@@ -26,15 +27,6 @@ function StartPage(props) {
     </div>
   );
 
-  const loading = (
-    <div className="columns">
-      <div className="column has-text-centered">
-        <LoadingSpinner />
-        <p>Loading...</p>
-      </div>
-    </div>
-  );
-
   let redirectToFeedbackGroup;
   if (props.feedbackGroup) {
     props.resetFeedbackGroupForm();
@@ -50,7 +42,7 @@ function StartPage(props) {
           <h1 className="is-size-1">Feedbacker</h1>
         </div>
       </div>
-      {props.joiningFeedbackGroup ? loading : joinOrCreate}
+      {props.joiningFeedbackGroup ? <Loading /> : joinOrCreate}
       {redirectToFeedbackGroup}
     </React.Fragment>
   );
