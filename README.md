@@ -1,5 +1,3 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
 # Setup Project
 
 You can run this project with firebase for free.
@@ -20,3 +18,7 @@ In the project directory, you can run:
 ### `yarn test`
 
 ### `yarn build`
+
+---
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
