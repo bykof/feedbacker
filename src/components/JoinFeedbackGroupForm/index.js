@@ -18,7 +18,7 @@ function JoinFeedbackGroupForm(props) {
           type="text"
           className="input is-medium"
           placeholder="Feedbacker ID"
-          value={props.joinFeedbackId}
+          value={props.joinFeedbackGroupId}
           onChange={(event) => props.setJoinFeedbackGroupId(event.target.value)}
         />
       </div>
@@ -28,15 +28,12 @@ function JoinFeedbackGroupForm(props) {
             type="password"
             className="input is-medium"
             placeholder="Password"
-            value={props.joinFeedbackPassword}
+            value={props.joinFeedbackGroupPassword}
             onChange={(event) => props.setJoinFeedbackGroupPassword(event.target.value)}
           />
         </div>
         <div className="control">
-          <button
-            type="submit"
-            className="button is-medium is-primary"
-          >
+          <button type="submit" className="button is-medium is-primary">
             Join
         </button>
         </div>
@@ -48,6 +45,7 @@ function JoinFeedbackGroupForm(props) {
 export default connect(
   state => ({
     joinFeedbackGroupId: state.joinFeedbackGroupForm.joinFeedbackGroupId,
+    joinFeedbackGroupPassword: state.joinFeedbackGroupForm.joinFeedbackGroupPassword,
   }),
   {
     joinFeedbackGroup,

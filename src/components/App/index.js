@@ -8,7 +8,8 @@ import {
 
 import StartPage from '../../pages/StartPage';
 import CreateFeedbackGroupPage from '../../pages/CreateFeedbackGroupPage';
-import { CREATE_FEEDBACK_GROUP_PATH } from '../../router/paths';
+import FeedbackGroupPage from '../FeedbackGroupPage';
+import { CREATE_FEEDBACK_GROUP_PATH, FEEDBACKGROUP_WILDCARD_PATH } from '../../router/paths';
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <Router>
           <Switch>
             <Route path={CREATE_FEEDBACK_GROUP_PATH} component={CreateFeedbackGroupPage} />
+            <Route path={FEEDBACKGROUP_WILDCARD_PATH} component={FeedbackGroupPage} />
             <Route path="/" component={StartPage} />
           </Switch>
         </Router>

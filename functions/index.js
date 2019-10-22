@@ -137,40 +137,66 @@ class FeedbackStore {
   }
 }
 
+function addCORS(response) {
+  response.set('Access-Control-Allow-Origin', '*');
+  response.set('Access-Control-Allow-Credentials', 'true');
+  response.set('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
+  response.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+}
+
 exports.createFeedbackGroup = functions.https.onRequest((request, response) => {
-  if (!request.body.password || !request.body.masterPassword) {
-    return response.status(400).send({ error: 'please provide password and masterPassword' });
+  addCORS(response);
+  if (request.method === 'OPTIONS') {
+    return response.status(204).send('');
+  }
+
+  if (!request.body.data.password || !request.body.data.masterPassword) {
+    return response.status(400).send({ data: { error: 'please provide password and masterPassword' } });
   }
 
   const feedbackStore = new FeedbackStore(admin);
-  const newFeedbackGroup = new FeedbackGroup(request.body.password, request.body.masterPassword);
-  return response.send(feedbackStore.create(newFeedbackGroup).toJSON());
+  const newFeedbackGroup = new FeedbackGroup(request.body.data.password, request.body.data.masterPassword);
+  return response.send({ data: feedbackStore.create(newFeedbackGroup).toJSON() });
 });
 
 exports.findAnonymousFeedbackGroup = functions.https.onRequest(async (request, response) => {
-  if (!request.body.feedbackerId || !request.body.password) {
-    return response.status(400).send({ error: 'please provide feedbackerId and password' });
+  addCORS(response);
+  if (request.method === 'OPTIONS') {
+    return response.status(204).send('');
+  }
+
+  if (!request.body.data.feedbackerId || !request.body.data.password) {
+    return response.status(400).send({ data: { error: 'please provide feedbackerId and password' } });
   }
   const feedbackStore = new FeedbackStore(admin);
-  const feedbackGroup = await feedbackStore.findAnonymousFeedbackGroup(request.body.feedbackerId, request.body.password);
+  const feedbackGroup = await feedbackStore.findAnonymousFeedbackGroup(request.body.data.feedbackerId, request.body.data.password);
 
   if (feedbackGroup) {
-    return response.send(feedbackGroup.toJSON());
+    return response.send({ data: feedbackGroup.toJSON() });
   } else {
-    return response.status(404).send({ error: 'feedbackGroup not found' })
+    return response.status(404).send({ data: { error: 'feedbackGroup not found' } })
   }
 });
 
 exports.findMasterFeedbackGroup = functions.https.onRequest(async (request, response) => {
-  if (!request.body.feedbackerId || !request.body.password || !request.body.masterPassword) {
-    return response.status(400).send({ error: 'please provide feedbackerId, password and masterPassword' });
+  addCORS(response);
+  if (request.method === 'OPTIONS') {
+    return response.status(204).send('');
+  }
+
+  if (!request.body.data.feedbackerId || !request.body.data.password || !request.body.data.masterPassword) {
+    return response.status(400).send({ data: { error: 'please provide feedbackerId, password and masterPassword' } });
   }
   const feedbackStore = new FeedbackStore(admin);
-  const feedbackGroup = await feedbackStore.findMasterFeedbackGroup(request.body.feedbackerId, request.body.password, request.body.masterPassword);
+  const feedbackGroup = await feedbackStore.findMasterFeedbackGroup(
+    request.body.data.feedbackerId,
+    request.body.data.password,
+    request.body.data.masterPassword,
+  );
 
   if (feedbackGroup) {
-    return response.send(feedbackGroup.toJSON());
+    return response.send({ data: feedbackGroup.toJSON() });
   } else {
-    return response.status(404).send({ error: 'feedbackGroup not found' })
+    return response.status(404).send({ data: { error: 'feedbackGroup not found' } })
   }
 });

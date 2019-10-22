@@ -1,4 +1,4 @@
-# Setup Project
+## Setup Project
 
 You can run this project with firebase for free.
 
