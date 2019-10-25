@@ -8,7 +8,7 @@ import {
 
 import StartPage from '../../pages/StartPage';
 import CreateFeedbackGroupPage from '../../pages/CreateFeedbackGroupPage';
-import FeedbackGroupPage from '../FeedbackGroupPage';
+import FeedbackGroupPage from '../../pages/FeedbackGroupPage';
 import { CREATE_FEEDBACK_GROUP_PATH, FEEDBACKGROUP_WILDCARD_PATH } from '../../router/paths';
 
 

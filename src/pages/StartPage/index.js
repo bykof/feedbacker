@@ -7,8 +7,6 @@ import CreateFeedbackGroupLink from '../../components/CreateFeedbackGroupLink';
 import Loading from '../../components/Loading';
 
 import { FEEDBACKGROUP_PATH } from '../../router/paths';
-import { resetFeedbackGroupForm } from '../../redux/actions';
-
 
 function StartPage(props) {
 
@@ -28,10 +26,9 @@ function StartPage(props) {
   );
 
   let redirectToFeedbackGroup;
-  if (props.feedbackGroup) {
-    props.resetFeedbackGroupForm();
+  if (props.anonymousFeedbackGroup) {
     redirectToFeedbackGroup = (
-      <Redirect push={true} to={FEEDBACKGROUP_PATH(props.feedbackGroup ? props.feedbackGroup.id : '')} />
+      <Redirect push={true} to={FEEDBACKGROUP_PATH(props.anonymousFeedbackGroup.id)} />
     );
   }
 
@@ -51,8 +48,7 @@ function StartPage(props) {
 
 export default connect(
   state => ({
-    joiningFeedbackGroup: state.joinFeedbackGroupForm.joiningFeedbackGroup,
-    feedbackGroup: state.joinFeedbackGroupForm.feedbackGroup,
+    anonymousFeedbackGroup: state.feedbackGroup.anonymousFeedbackGroup,
   }),
-  { resetFeedbackGroupForm },
+  {},
 )(StartPage);

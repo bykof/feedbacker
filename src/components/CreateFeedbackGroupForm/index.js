@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { setCreateFeedbackGroupPassword, createFeedbackGroup } from '../../redux/actions'
+import {
+  createFeedbackGroup
+} from '../../redux/actions'
 
 function CreateFeedbackGroupForm(props) {
-
+  const [feedbackGroupPassword, setFeedbackGroupPassword] = useState('');
+  const [feedbackGroupMasterPassword, setFeedbackGroupMasterPassword] = useState('');
   const onSubmit = (event) => {
-    props.createFeedbackGroup();
+    props.createFeedbackGroup(feedbackGroupPassword, feedbackGroupMasterPassword);
     event.preventDefault();
-  }
+  };
 
   return (
     <form onSubmit={onSubmit}>
@@ -16,8 +19,17 @@ function CreateFeedbackGroupForm(props) {
           type="password"
           className="input is-medium"
           placeholder="New Password"
-          value={props.createFeedbackGroupPassword}
-          onChange={(event) => props.setCreateFeedbackGroupPassword(event.target.value)}
+          value={feedbackGroupPassword}
+          onChange={(event) => setFeedbackGroupPassword(event.target.value)}
+        />
+      </div>
+      <div className="field">
+        <input
+          type="password"
+          className="input is-medium"
+          placeholder="New Master Password"
+          value={feedbackGroupMasterPassword}
+          onChange={(event) => setFeedbackGroupMasterPassword(event.target.value)}
         />
       </div>
       <button type="submit" className="button is-primary is-medium is-fullwidth">
@@ -28,11 +40,6 @@ function CreateFeedbackGroupForm(props) {
 }
 
 export default connect(
-  state => ({
-    createFeedbackGroupPassword: state.createFeedbackGroupForm.createFeedbackGroupPassword,
-  }),
-  {
-    setCreateFeedbackGroupPassword,
-    createFeedbackGroup,
-  }
+  state => ({}),
+  { createFeedbackGroup }
 )(CreateFeedbackGroupForm);

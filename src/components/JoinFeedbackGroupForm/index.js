@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
 
-import { joinFeedbackGroup, setJoinFeedbackGroupId, setJoinFeedbackGroupPassword } from '../../redux/actions';
+import { findAnonymousFeedbackGroup } from '../../redux/actions';
+import LoadingSpinner from '../LoadingSpinner';
 
 
 function JoinFeedbackGroupForm(props) {
-
+  const [feedbackerId, setFeedbackerId] = useState('');
+  const [password, setPassword] = useState('');
   const onSubmit = (event) => {
-    props.joinFeedbackGroup();
+    props.findAnonymousFeedbackGroup(feedbackerId, password);
     event.preventDefault();
   }
 
@@ -16,40 +19,62 @@ function JoinFeedbackGroupForm(props) {
       <div className="field">
         <input
           type="text"
-          className="input is-medium"
+          className={
+            classNames(
+              'input',
+              'is-medium',
+              {
+                'is-danger': props.anonymousFeedbackGroupError
+              },
+            )
+          }
+
           placeholder="Feedbacker ID"
-          value={props.joinFeedbackGroupId}
-          onChange={(event) => props.setJoinFeedbackGroupId(event.target.value)}
+          value={feedbackerId}
+          onChange={(event) => setFeedbackerId(event.target.value)}
         />
       </div>
       <div className="field has-addons">
         <div className="control is-expanded">
           <input
             type="password"
-            className="input is-medium"
+            className={
+              classNames(
+                'input',
+                'is-medium',
+                {
+                  'is-danger': props.anonymousFeedbackGroupError,
+                },
+              )
+            }
             placeholder="Password"
-            value={props.joinFeedbackGroupPassword}
-            onChange={(event) => props.setJoinFeedbackGroupPassword(event.target.value)}
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
           />
         </div>
         <div className="control">
           <button type="submit" className="button is-medium is-primary">
-            Join
-        </button>
+            {
+              props.searchingAnonymousFeedbackGroup ? (
+                <LoadingSpinner />
+              ) : "Join"
+            }
+          </button>
         </div>
       </div>
+      {
+        props.anonymousFeedbackGroupError ? (
+          <p class="help is-danger">The Feedbacker ID or the password are wrong!</p>
+        ) : null
+      }
     </form>
   );
 }
 
 export default connect(
   state => ({
-    joinFeedbackGroupId: state.joinFeedbackGroupForm.joinFeedbackGroupId,
-    joinFeedbackGroupPassword: state.joinFeedbackGroupForm.joinFeedbackGroupPassword,
+    anonymousFeedbackGroupError: state.feedbackGroup.anonymousFeedbackGroupError,
+    searchingAnonymousFeedbackGroup: state.feedbackGroup.searchingAnonymousFeedbackGroup,
   }),
-  {
-    joinFeedbackGroup,
-    setJoinFeedbackGroupId,
-    setJoinFeedbackGroupPassword,
-  }
+  { findAnonymousFeedbackGroup }
 )(JoinFeedbackGroupForm);

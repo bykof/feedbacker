@@ -1,22 +1,36 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import CreateFeedbackGroupForm from '../../components/CreateFeedbackGroupForm';
+import CreatedFeedbackGroup from '../../components/CreatedFeedbackGroup';
 
 
 function CreateFeedbackGroupPage(props) {
+  let content;
+  if (props.createdFeedbackGroup) {
+    content = (
+      <CreatedFeedbackGroup createdFeedbackGroup={props.createdFeedbackGroup} />
+    );
+  } else {
+    content = (
+      <React.Fragment>
+        <div className="colummns">
+          <div className="column">
+            <h1 className="title">
+              Create a Feedback Group
+          </h1>
+          </div>
+        </div>
+        <div className="colummns">
+          <div className="column">
+            <CreateFeedbackGroupForm />
+          </div>
+        </div>
+      </React.Fragment>
+    );
+  }
   return (
     <React.Fragment>
-      <div className="colummns">
-        <div className="column">
-          <p>
-            Create a new Feedback Group
-        </p>
-        </div>
-      </div>
-      <div className="colummns">
-        <div className="column">
-          <CreateFeedbackGroupForm />
-        </div>
-      </div>
+      {content}
       <div className="colummns">
         <div className="column">
           <button onClick={props.history.goBack} type="button" className="button is-medium is-info is-fullwidth">
@@ -28,4 +42,9 @@ function CreateFeedbackGroupPage(props) {
   )
 }
 
-export default CreateFeedbackGroupPage;
+export default connect(
+  (state) => ({
+    createdFeedbackGroup: state.feedbackGroup.createdFeedbackGroup,
+  }),
+  {},
+)(CreateFeedbackGroupPage);

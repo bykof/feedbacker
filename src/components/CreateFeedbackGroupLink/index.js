@@ -7,7 +7,7 @@ import { CREATE_FEEDBACK_GROUP_PATH } from '../../router/paths';
 function CreateFeedbackGroupLink(props) {
   return (
     <Link to={CREATE_FEEDBACK_GROUP_PATH} type="button" className="button is-info is-medium is-fullwidth">
-      Create new Feedback Group
+      New Feedback Group
     </Link>
   )
 }

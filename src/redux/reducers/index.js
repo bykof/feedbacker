@@ -1,5 +1,4 @@
 import { combineReducers } from "redux";
-import joinFeedbackGroupForm from './joinFeedbackGroupForm';
-import createFeedbackGroupForm from './createFeedbackGroupForm';
+import feedbackGroup from './feedbackGroup';
 
-export default combineReducers({ joinFeedbackGroupForm, createFeedbackGroupForm });
+export default combineReducers({ feedbackGroup });

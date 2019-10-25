@@ -1,150 +1,14 @@
-const crypto = require('crypto');
-
-const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+const functions = require('firebase-functions');
+
+const addCORS = require('./addCors');
+const FeedbackGroup = require('./models/FeedbackGroup');
+const FeedbackStore = require('./stores/FeedbackStore');
+
 admin.initializeApp();
 
-class Feedback {
-  constructor(goodText, improvementText) {
-    this.goodText = goodText;
-    this.improvementText = improvementText;
-  }
 
-  toJSON() {
-    return {
-      goodText: this.goodText,
-      improvementText: this.improvementText,
-    }
-  }
-}
-
-class FeedbackGroup {
-  constructor(
-    password = null,
-    masterPassword = null,
-    feedbacks = [],
-    id = null,
-    feedbackerId = null,
-    hashedPassword = null,
-    hashedMasterPassword = null,
-  ) {
-    this.id = id
-    this.feedbacks = feedbacks.map(this.mapToFeedback);
-    this.feedbackerId = feedbackerId ? feedbackerId : this.generateFeedbackerId();
-    this.hashedPassword = password && password !== '' ? this.encrypt(password) : hashedPassword;
-    this.hashedMasterPassword = masterPassword && masterPassword !== '' ? this.encrypt(masterPassword) : hashedMasterPassword;
-  }
-
-  generateFeedbackerId() {
-    return (Math.floor(Math.random() * 90000) + 10000).toString();
-  }
-
-  encrypt(password) {
-    return crypto.createHmac(
-      'sha256',
-      functions.config().passwords.hashpassword,
-    ).update(password).digest('hex');
-  }
-
-  samePassword(password) {
-    return this.hashedPassword === this.encrypt(password);
-  }
-
-  sameMasterPassword(masterPassword) {
-    return this.hashedMasterPassword === this.encrypt(masterPassword);
-  }
-
-  mapToFeedback(feedbackJson) {
-    return new Feedback(
-      feedbackJson.goodText,
-      feedbackJson.improvementText,
-    )
-  }
-
-  deepCopy() {
-    return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
-  }
-
-  toAnonymous() {
-    const copiedFeedbackGroup = this.deepCopy();
-    copiedFeedbackGroup.feedbacks = undefined;
-    copiedFeedbackGroup.hashedMasterPassword = undefined;
-    return copiedFeedbackGroup;
-  }
-
-  toJSON() {
-    const json = {
-      id: this.id,
-      feedbackerId: this.feedbackerId,
-    };
-
-    if (this.feedbacks) {
-      json.feedbacks = this.feedbacks.map(feedback => feedback.toJSON())
-    }
-    return json
-  }
-}
-
-class FeedbackStore {
-  constructor(admin) {
-    this.feedbackGroups = admin.database().ref('feedbackGroups');
-  }
-
-  toFeedbackGroup(id, feedbackGroupJSON) {
-    return new FeedbackGroup(
-      null,
-      null,
-      feedbackGroupJSON.feedbacks,
-      id,
-      feedbackGroupJSON.feedbackerId,
-      feedbackGroupJSON.hashedPassword,
-      feedbackGroupJSON.hashedMasterPassword,
-    );
-  }
-
-  create(feedbackGroup) {
-    return this.feedbackGroups.push(feedbackGroup.toJSON());
-  }
-
-  async findFeedbackGroup(feedbackerId, password) {
-    let foundFeedbackGroup = null;
-    const snapshot = await this.feedbackGroups.once('value')
-    const feedbackGroupsJSON = snapshot.val();
-
-    for (const key in feedbackGroupsJSON) {
-      const feedbackGroup = this.toFeedbackGroup(key, feedbackGroupsJSON[key]);
-
-      if (feedbackGroup.feedbackerId === feedbackerId && feedbackGroup.samePassword(password)) {
-        foundFeedbackGroup = feedbackGroup;
-      }
-    }
-    return foundFeedbackGroup;
-  }
-
-  async findAnonymousFeedbackGroup(feedbackerId, password) {
-    const foundFeedbackGroup = await this.findFeedbackGroup(feedbackerId, password);
-    if (foundFeedbackGroup) {
-      return foundFeedbackGroup.toAnonymous();
-    }
-    return foundFeedbackGroup;
-  }
-
-  async findMasterFeedbackGroup(feedbackerId, password, masterPassword) {
-    const foundFeedbackGroup = await this.findFeedbackGroup(feedbackerId, password);
-    if (foundFeedbackGroup && foundFeedbackGroup.sameMasterPassword(masterPassword)) {
-      return foundFeedbackGroup;
-    }
-  }
-}
-
-function addCORS(response) {
-  response.set('Access-Control-Allow-Origin', '*');
-  response.set('Access-Control-Allow-Credentials', 'true');
-  response.set('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
-  response.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-}
-
-exports.createFeedbackGroup = functions.https.onRequest((request, response) => {
+exports.createFeedbackGroup = functions.https.onRequest(async (request, response) => {
   addCORS(response);
   if (request.method === 'OPTIONS') {
     return response.status(204).send('');
@@ -156,7 +20,8 @@ exports.createFeedbackGroup = functions.https.onRequest((request, response) => {
 
   const feedbackStore = new FeedbackStore(admin);
   const newFeedbackGroup = new FeedbackGroup(request.body.data.password, request.body.data.masterPassword);
-  return response.send({ data: feedbackStore.create(newFeedbackGroup).toJSON() });
+  const createdFeedbackGroup = await feedbackStore.create(newFeedbackGroup);
+  return response.send({ data: createdFeedbackGroup.toJSON() });
 });
 
 exports.findAnonymousFeedbackGroup = functions.https.onRequest(async (request, response) => {
@@ -174,7 +39,7 @@ exports.findAnonymousFeedbackGroup = functions.https.onRequest(async (request, r
   if (feedbackGroup) {
     return response.send({ data: feedbackGroup.toJSON() });
   } else {
-    return response.status(404).send({ data: { error: 'feedbackGroup not found' } })
+    return response.status(404).send({ data: { error: 'the feedbackGroup was not found' } })
   }
 });
 
@@ -197,6 +62,56 @@ exports.findMasterFeedbackGroup = functions.https.onRequest(async (request, resp
   if (feedbackGroup) {
     return response.send({ data: feedbackGroup.toJSON() });
   } else {
-    return response.status(404).send({ data: { error: 'feedbackGroup not found' } })
+    return response.status(404).send({ data: { error: 'the feedbackGroup was not found' } })
+  }
+});
+
+exports.addFeedback = functions.https.onRequest(async (request, response) => {
+  addCORS(response);
+  if (request.method === 'OPTIONS') {
+    return response.status(204).send('');
+  }
+
+  if (!request.body.data.feedbackGroupId || !request.body.data.feedback || !request.body.data.feedback.goodText || !request.body.data.feedback.improvementText) {
+    return response.status(400).send({ data: { error: 'please provide feedbackGroupId and feedback(goodText, improvementText)' } });
+  }
+  const feedbackStore = new FeedbackStore(admin);
+  try {
+    const feedbackGroup = await feedbackStore.addFeedback(
+      request.body.data.feedbackGroupId,
+      request.body.data.feedback,
+    );
+    if (feedbackGroup) {
+      return response.send({ data: feedbackGroup.toJSON() });
+    } else {
+      return response.status(404).send({ data: { error: 'the feedbackGroup was not found' } })
+    }
+  } catch (error) {
+    return response.status(500).send({ data: { error: `an unexpected error occured: ${error}` } })
+  }
+});
+
+
+exports.findFeedbackGroup = functions.https.onRequest(async (request, response) => {
+  addCORS(response);
+  if (request.method === 'OPTIONS') {
+    return response.status(204).send('');
+  }
+
+  if (!request.body.data.feedbackGroupId) {
+    return response.status(400).send({ data: { error: 'please provide feedbackGroupId' } });
+  }
+  const feedbackStore = new FeedbackStore(admin);
+  try {
+    const feedbackGroup = await feedbackStore.getFeedbackGroupById(
+      request.body.data.feedbackGroupId,
+    );
+    if (feedbackGroup) {
+      return response.send({ data: feedbackGroup.toJSON() });
+    } else {
+      return response.status(404).send({ data: { error: 'the feedbackGroup was not found' } })
+    }
+  } catch (error) {
+    return response.status(500).send({ data: { error: `an unexpected error occured: ${error}` } })
   }
 });
