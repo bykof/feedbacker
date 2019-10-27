@@ -8,11 +8,12 @@ import Loading from '../../components/Loading';
 function FeedbackGroupPage(props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [setFeedbackGroup] = useState(null);
+  const [feedbackGroup, setFeedbackGroup] = useState(null);
   const feedbackGroupId = props.match.params.feedbackGroupId;
 
   useEffect(() => {
     const findFeedbackGroup = firebase.functions().httpsCallable('findFeedbackGroup');
+    setLoading(true);
     findFeedbackGroup({
       feedbackGroupId: feedbackGroupId,
     }).then((response) => {
@@ -28,13 +29,13 @@ function FeedbackGroupPage(props) {
   if (loading) {
     content = <Loading />;
   } else {
-    if (error && !feedbackGroupId) {
+    if (error && !feedbackGroup) {
       content = (
         <React.Fragment>
           <div className="columns">
             <div className="column">
               <div class="notification is-danger">
-                Oops! I think you are searching for a wrong thingy thing here...
+                Oops! I think you got lost...
             </div>
             </div>
           </div>

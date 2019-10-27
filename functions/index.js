@@ -82,7 +82,7 @@ exports.addFeedback = functions.https.onRequest(async (request, response) => {
       request.body.data.feedback,
     );
     if (feedbackGroup) {
-      return response.send({ data: feedbackGroup.toJSON() });
+      return response.send({ data: feedbackGroup.toAnonymous().toJSON() });
     } else {
       return response.status(404).send({ data: { error: 'the feedbackGroup was not found' } })
     }

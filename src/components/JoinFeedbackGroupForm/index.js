@@ -53,7 +53,7 @@ function JoinFeedbackGroupForm(props) {
           />
         </div>
         <div className="control">
-          <button type="submit" className="button is-medium is-primary">
+          <button type="submit" className="button is-medium is-primary" disabled={props.searchingAnonymousFeedbackGroup}>
             {
               props.searchingAnonymousFeedbackGroup ? (
                 <LoadingSpinner />
@@ -64,7 +64,7 @@ function JoinFeedbackGroupForm(props) {
       </div>
       {
         props.anonymousFeedbackGroupError ? (
-          <p class="help is-danger">The Feedbacker ID or the password are wrong!</p>
+          <p className="help is-danger">The Feedbacker ID or the password are wrong!</p>
         ) : null
       }
     </form>
