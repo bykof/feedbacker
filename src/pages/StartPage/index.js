@@ -4,7 +4,6 @@ import { Redirect } from 'react-router-dom';
 
 import JoinFeedbackGroupForm from '../../components/JoinFeedbackGroupForm';
 import CreateFeedbackGroupLink from '../../components/CreateFeedbackGroupLink';
-import Loading from '../../components/Loading';
 
 import { FEEDBACKGROUP_PATH } from '../../router/paths';
 import { invalidateAnonymousFeedbackGroup } from '../../redux/actions';
@@ -27,11 +26,17 @@ function StartPage(props) {
   );
 
   let redirectToFeedbackGroup;
-  if (props.anonymousFeedbackGroup) {
+  let redirectId;
+  if (props.anonymousFeedbackGroup) {
+    redirectId = props.anonymousFeedbackGroup.id;
+  }
+  if (props.masterFeedbackGroup) {
+    redirectId = props.masterFeedbackGroup.id;
+  }
+  if (redirectId) {
     redirectToFeedbackGroup = (
-      <Redirect push={true} to={FEEDBACKGROUP_PATH(props.anonymousFeedbackGroup.id)} />
+      <Redirect push={true} to={FEEDBACKGROUP_PATH(redirectId)} />
     );
-    props.invalidateAnonymousFeedbackGroup();
   }
 
   return (
@@ -41,7 +46,7 @@ function StartPage(props) {
           <h1 className="is-size-1">Feedbacker</h1>
         </div>
       </div>
-      {props.joiningFeedbackGroup ? <Loading /> : joinOrCreate}
+      {joinOrCreate}
       {redirectToFeedbackGroup}
     </React.Fragment>
   );
@@ -51,6 +56,9 @@ function StartPage(props) {
 export default connect(
   state => ({
     anonymousFeedbackGroup: state.feedbackGroup.anonymousFeedbackGroup,
+    masterFeedbackGroup: state.feedbackGroup.masterFeedbackGroup,
+    searchingAnonymousFeedbackGroup: state.feedbackGroup.searchingAnonymousFeedbackGroup,
+    searchingMasterFeedbackGroup: state.feedbackGroup.searchingMasterFeedbackGroup,
   }),
   { invalidateAnonymousFeedbackGroup },
 )(StartPage);

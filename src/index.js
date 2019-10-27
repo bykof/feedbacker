@@ -9,6 +9,7 @@ import store from './redux/store'
 import { Provider } from 'react-redux'
 
 import 'bulma';
+import 'bulma-switch';
 import '@fortawesome/fontawesome-free/js/all';
 
 initFirebase();

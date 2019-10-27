@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import * as firebase from 'firebase';
 import className from 'classnames';
-import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
+import {
+  invalidateAnonymousFeedbackGroup,
+} from '../../redux/actions';
 import LoadingSpinner from '../LoadingSpinner';
 
 function CreateFeedbackForm(props) {
@@ -43,7 +46,7 @@ function CreateFeedbackForm(props) {
       </div>
       <div className="columns">
         <div className="column has-text-centered">
-          <figure class="image is-128x128 has-ratio">
+          <figure className="image is-128x128 has-ratio">
             <img alt="Thank you gif" src="https://media.giphy.com/media/26FxJCp8QNIvJucCs/giphy.gif" />
           </figure>
         </div>
@@ -81,9 +84,9 @@ function CreateFeedbackForm(props) {
         {isLoading ? <LoadingSpinner /> : 'Send Feedback'}
       </button>
       <br />
-      <Link to={'/'} type="button" className="button is-medium is-info is-fullwidth">
+      <button type="button" onClick={props.invalidateAnonymousFeedbackGroup} className="button is-medium is-info is-fullwidth">
         Back
-      </Link>
+      </button>
     </form>
   )
 
@@ -94,4 +97,7 @@ function CreateFeedbackForm(props) {
   return formContent;
 }
 
-export default CreateFeedbackForm;
+export default connect(
+  (state) => ({}),
+  {invalidateAnonymousFeedbackGroup},
+)(CreateFeedbackForm);

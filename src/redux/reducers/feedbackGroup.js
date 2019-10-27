@@ -8,7 +8,11 @@ import {
   CREATE_FEEDBACK_GROUP_ERROR,
   FIND_ANONYMOUS_FEEDBACK_GROUP_ERROR,
   FIND_ANONYMOUS_FEEDBACK_GROUP_SUCCESS,
-  INVALIDATE_ANONYMOUS_FEEDBACK_GROUP
+  INVALIDATE_ANONYMOUS_FEEDBACK_GROUP,
+  FIND_MASTER_FEEDBACK_GROUP,
+  FIND_MASTER_FEEDBACK_GROUP_SUCCESS,
+  FIND_MASTER_FEEDBACK_GROUP_ERROR,
+  INVALIDATE_MASTER_FEEDBACK_GROUP
 } from "../actionTypes";
 import {
   findAnonymousFeedbackGroupSuccess,
@@ -17,6 +21,8 @@ import {
 
   createFeedbackGroupSuccess,
   createFeedbackGroupError,
+  findMasterFeedbackGroupSuccess,
+  findMasterFeedbackGroupError,
 } from '../actions';
 
 const initialJoinFeedBackGroupState = {
@@ -27,13 +33,16 @@ const initialJoinFeedBackGroupState = {
   searchingAnonymousFeedbackGroup: false,
   anonymousFeedbackGroup: null,
   anonymousFeedbackGroupError: null,
+
+  searchingMasterFeedbackGroup: false,
+  masterFeedbackGroup: null,
+  masterFeedbackGroupError: null,
 };
 
 export default function (state = initialJoinFeedBackGroupState, action) {
   switch (action.type) {
     case FIND_ANONYMOUS_FEEDBACK_GROUP:
       const findAnonymousFeedbackGroup = firebase.functions().httpsCallable('findAnonymousFeedbackGroup');
-      console.log(`Find anonymous feedbackGroup: ${action.payload.feedbackerId}, ${action.payload.password}`);
       findAnonymousFeedbackGroup({
         feedbackerId: action.payload.feedbackerId,
         password: action.payload.password,
@@ -52,6 +61,29 @@ export default function (state = initialJoinFeedBackGroupState, action) {
 
     case INVALIDATE_ANONYMOUS_FEEDBACK_GROUP:
       return { ...state, searchingAnonymousFeedbackGroup: false, anonymousFeedbackGroup: null, anonymousFeedbackGroupError: null };
+
+    case FIND_MASTER_FEEDBACK_GROUP:
+      const findMasterFeedbackGroup = firebase.functions().httpsCallable('findMasterFeedbackGroup');
+      findMasterFeedbackGroup({
+        feedbackerId: action.payload.feedbackerId,
+        password: action.payload.password,
+        masterPassword: action.payload.masterPassword,
+      }).then((response) => {
+        store.dispatch(findMasterFeedbackGroupSuccess(response.data));
+      }).catch((error) => {
+        store.dispatch(findMasterFeedbackGroupError(error));
+      })
+      return { ...state, searchingMasterFeedbackGroup: true, masterFeedbackGroup: null, masterFeedbackGroupError: null };
+
+    case FIND_MASTER_FEEDBACK_GROUP_SUCCESS:
+      return { ...state, searchingMasterFeedbackGroup: false, masterFeedbackGroup: action.payload, masterFeedbackGroupError: null };
+
+    case FIND_MASTER_FEEDBACK_GROUP_ERROR:
+      return { ...state, searchingMasterFeedbackGroup: false, masterFeedbackGroup: null, masterFeedbackGroupError: action.payload };
+
+    case INVALIDATE_MASTER_FEEDBACK_GROUP:
+      return { ...state, searchingMasterFeedbackGroup: false, masterFeedbackGroup: null, masterFeedbackGroupError: null };
+
     case CREATE_FEEDBACK_GROUP:
       const createFeedbackGroup = firebase.functions().httpsCallable('createFeedbackGroup');
       console.log(`Creating FeedbackGroup with: ${action.payload.password}, ${action.payload.masterPassword}`);

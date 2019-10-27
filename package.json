@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "bulma": "^0.8.0",
+    "bulma-switch": "^2.0.0",
     "classnames": "^2.2.6",
     "firebase": "^7.2.1",
     "node-sass": "^4.12.0",
