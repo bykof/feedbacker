@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import * as firebase from 'firebase';
 import className from 'classnames';
+import { Link } from 'react-router-dom';
 
 import LoadingSpinner from '../LoadingSpinner';
 
@@ -79,6 +80,10 @@ function CreateFeedbackForm(props) {
       <button type="submit" className="button is-primary is-medium is-fullwidth" disabled={isLoading}>
         {isLoading ? <LoadingSpinner /> : 'Send Feedback'}
       </button>
+      <br />
+      <Link to={'/'} type="button" className="button is-medium is-info is-fullwidth">
+        Back
+      </Link>
     </form>
   )
 
