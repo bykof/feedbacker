@@ -1,6 +1,6 @@
 
 const crypto = require('crypto');
-
+const functions = require('firebase-functions');
 const Feedback = require('./Feedback');
 
 module.exports = class FeedbackGroup {
