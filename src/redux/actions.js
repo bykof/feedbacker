@@ -5,6 +5,7 @@ import {
   FIND_ANONYMOUS_FEEDBACK_GROUP_ERROR,
   CREATE_FEEDBACK_GROUP_SUCCESS,
   CREATE_FEEDBACK_GROUP_ERROR,
+  INVALIDATE_ANONYMOUS_FEEDBACK_GROUP,
 } from "./actionTypes";
 
 export const findAnonymousFeedbackGroup = (feedbackerId, password) => ({
@@ -24,6 +25,10 @@ export const findAnonymousFeedbackGroupSuccess = feedbackGroup => ({
 export const findAnonymousFeedbackGroupError = error => ({
   type: FIND_ANONYMOUS_FEEDBACK_GROUP_ERROR,
   payload: error,
+});
+
+export const invalidateAnonymousFeedbackGroup = () => ({
+  type: INVALIDATE_ANONYMOUS_FEEDBACK_GROUP,
 });
 
 export const createFeedbackGroup = (password, masterPassword) => ({

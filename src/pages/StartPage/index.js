@@ -7,6 +7,7 @@ import CreateFeedbackGroupLink from '../../components/CreateFeedbackGroupLink';
 import Loading from '../../components/Loading';
 
 import { FEEDBACKGROUP_PATH } from '../../router/paths';
+import { invalidateAnonymousFeedbackGroup } from '../../redux/actions';
 
 function StartPage(props) {
 
@@ -30,6 +31,7 @@ function StartPage(props) {
     redirectToFeedbackGroup = (
       <Redirect push={true} to={FEEDBACKGROUP_PATH(props.anonymousFeedbackGroup.id)} />
     );
+    props.invalidateAnonymousFeedbackGroup();
   }
 
   return (
@@ -50,5 +52,5 @@ export default connect(
   state => ({
     anonymousFeedbackGroup: state.feedbackGroup.anonymousFeedbackGroup,
   }),
-  {},
+  { invalidateAnonymousFeedbackGroup },
 )(StartPage);

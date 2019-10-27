@@ -8,6 +8,7 @@ import {
   CREATE_FEEDBACK_GROUP_ERROR,
   FIND_ANONYMOUS_FEEDBACK_GROUP_ERROR,
   FIND_ANONYMOUS_FEEDBACK_GROUP_SUCCESS,
+  INVALIDATE_ANONYMOUS_FEEDBACK_GROUP
 } from "../actionTypes";
 import {
   findAnonymousFeedbackGroupSuccess,
@@ -49,6 +50,8 @@ export default function (state = initialJoinFeedBackGroupState, action) {
     case FIND_ANONYMOUS_FEEDBACK_GROUP_ERROR:
       return { ...state, searchingAnonymousFeedbackGroup: false, anonymousFeedbackGroup: null, anonymousFeedbackGroupError: action.payload };
 
+    case INVALIDATE_ANONYMOUS_FEEDBACK_GROUP:
+      return { ...state, searchingAnonymousFeedbackGroup: false, anonymousFeedbackGroup: null, anonymousFeedbackGroupError: null };
     case CREATE_FEEDBACK_GROUP:
       const createFeedbackGroup = firebase.functions().httpsCallable('createFeedbackGroup');
       console.log(`Creating FeedbackGroup with: ${action.payload.password}, ${action.payload.masterPassword}`);
