@@ -16,13 +16,17 @@ function App() {
   return (
     <section className="section">
       <div className="container">
-        <Router>
-          <Switch>
-            <Route path={CREATE_FEEDBACK_GROUP_PATH} component={CreateFeedbackGroupPage} />
-            <Route path={FEEDBACKGROUP_WILDCARD_PATH} component={FeedbackGroupPage} />
-            <Route path="/" component={StartPage} />
-          </Switch>
-        </Router>
+        <div className="columns">
+          <div className="column is-three-fifths is-offset-one-fifth">
+            <Router>
+              <Switch>
+                <Route path={CREATE_FEEDBACK_GROUP_PATH} component={CreateFeedbackGroupPage} />
+                <Route path={FEEDBACKGROUP_WILDCARD_PATH} component={FeedbackGroupPage} />
+                <Route path="/" component={StartPage} />
+              </Switch>
+            </Router>
+          </div>
+        </div>
       </div>
     </section>
   );
