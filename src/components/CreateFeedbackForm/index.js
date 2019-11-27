@@ -40,15 +40,10 @@ function CreateFeedbackForm(props) {
   const createdContent = (
     <React.Fragment>
       <div className="columns">
-        <div className="column">
-          Thank you very much for you feedback!
-        </div>
-      </div>
-      <div className="columns">
         <div className="column has-text-centered">
-          <figure className="image is-128x128 has-ratio">
-            <img alt="Thank you gif" src="https://media.giphy.com/media/26FxJCp8QNIvJucCs/giphy.gif" />
-          </figure>
+          <h1 className="title is-1">
+            Thank you very much for you feedback!
+          </h1>
         </div>
       </div>
     </React.Fragment>
@@ -99,5 +94,5 @@ function CreateFeedbackForm(props) {
 
 export default connect(
   (state) => ({}),
-  {invalidateAnonymousFeedbackGroup},
+  { invalidateAnonymousFeedbackGroup },
 )(CreateFeedbackForm);

@@ -22,6 +22,14 @@ function CreateFeedbackGroupPage(props) {
         </div>
         <div className="colummns">
           <div className="column">
+            <p>
+              Please do not forget this password. <br />
+              You will need it to retrieve your feedbacks.
+            </p>
+          </div>
+        </div>
+        <div className="colummns">
+          <div className="column">
             <CreateFeedbackGroupForm />
           </div>
         </div>
