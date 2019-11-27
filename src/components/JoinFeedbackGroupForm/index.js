@@ -123,7 +123,7 @@ function JoinFeedbackGroupForm(props) {
       }
       <div className="field">
         <input id="isMaster" type="checkbox" className="switch is-rounded" checked={isMaster} onChange={toggleIsMaster} />
-        <label htmlFor="isMaster">Show feedbacks</label>
+        <label htmlFor="isMaster">receive feedbacks</label>
       </div>
     </form>
   );
