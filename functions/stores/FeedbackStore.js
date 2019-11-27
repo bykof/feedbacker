@@ -15,7 +15,21 @@ module.exports = class FeedbackStore {
     );
   }
 
+  async checkForExistingFeedbackGroup(feedbackGroup, loop = 0, limit = 10) {
+    if (loop >= limit) {
+      throw new Error('overloaded feedbackGroups');
+    }
+
+    const existingFeedbackGroup = await this.getFeedbackGroupById(feedbackGroup.feedbackerId);
+    if (existingFeedbackGroup) {
+      feedbackGroup.feedbackerId = feedbackGroup.generateFeedbackerId();
+      this.checkForExistingFeedbackGroup(feedbackGroup, loop + 1, limit);
+      return
+    }
+  }
+
   async create(feedbackGroup) {
+    await this.checkForExistingFeedbackGroup(feedbackGroup);
     const newFeedbackGroupRef = await this.feedbackGroups.push(feedbackGroup.toJSON());
     const newFeedbackGroupSnapshot = await newFeedbackGroupRef.once('value');
     return this.toFeedbackGroup(newFeedbackGroupSnapshot.key, newFeedbackGroupSnapshot.val());

@@ -24,8 +24,12 @@ exports.createFeedbackGroup = functions.https.onRequest(async (request, response
 
   const feedbackStore = new FeedbackStore(admin);
   const newFeedbackGroup = new FeedbackGroup(request.body.data.password);
-  const createdFeedbackGroup = await feedbackStore.create(newFeedbackGroup);
-  return response.send({ data: createdFeedbackGroup.toJSON() });
+  try {
+    const createdFeedbackGroup = await feedbackStore.create(newFeedbackGroup);
+    return response.send({ data: createdFeedbackGroup.toJSON() });
+  } catch (error) {
+    return response.status(500).send({ data: { error: 'please try again later' } })
+  }
 });
 
 exports.findAnonymousFeedbackGroup = functions.https.onRequest(async (request, response) => {
