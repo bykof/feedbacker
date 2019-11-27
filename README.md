@@ -1,10 +1,13 @@
 <h1 align="center">Feedbacker</h1>
 <p align="center">
-  - create and receive anonymous feedbacks without login and for free -
+  - create and receive anonymous feedbacks without login and for free - <br />
   Try it: <a href="https://feedbacker.dev">feedbacker.dev</a>
 </p>
 
-![Feedbacker Screenshot](https://github.com/bykof/feedbacker/raw/master/misc/feedbacker.png)
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/bykof/feedbacker/master/misc/feedbacker.png" alt="Feedbacker Screenshot" width="738">
+</p>
 
 ## Setup Project
 
