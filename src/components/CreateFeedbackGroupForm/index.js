@@ -8,9 +8,9 @@ import LoadingSpinner from '../LoadingSpinner';
 
 function CreateFeedbackGroupForm(props) {
   const [feedbackGroupPassword, setFeedbackGroupPassword] = useState('');
-  const [feedbackGroupMasterPassword, setFeedbackGroupMasterPassword] = useState('');
+  const [feedbackGroupRepeatPassword, setFeedbackGroupRepeatPassword] = useState('');
   const onSubmit = (event) => {
-    props.createFeedbackGroup(feedbackGroupPassword, feedbackGroupMasterPassword);
+    props.createFeedbackGroup(feedbackGroupPassword, feedbackGroupRepeatPassword);
     event.preventDefault();
   };
 
@@ -19,7 +19,7 @@ function CreateFeedbackGroupForm(props) {
       <div className="field">
         <input
           type="password"
-          className={className('input is-medium', {'is-danger': props.createdError !== null})}
+          className={className('input is-medium', { 'is-danger': props.createdError !== null })}
           placeholder="New Password"
           value={feedbackGroupPassword}
           onChange={(event) => setFeedbackGroupPassword(event.target.value)}
@@ -28,15 +28,15 @@ function CreateFeedbackGroupForm(props) {
       <div className="field">
         <input
           type="password"
-          className={className('input is-medium', {'is-danger': props.createdError !== null})}
-          placeholder="New Master Password"
-          value={feedbackGroupMasterPassword}
-          onChange={(event) => setFeedbackGroupMasterPassword(event.target.value)}
+          className={className('input is-medium', { 'is-danger': props.createdError !== null })}
+          placeholder="Repeat Password"
+          value={feedbackGroupRepeatPassword}
+          onChange={(event) => setFeedbackGroupRepeatPassword(event.target.value)}
         />
       </div>
       {
         props.createdError ? (
-          <p className="help is-danger">Please check the input fields</p>
+          <p className="help is-danger">Please check input fields</p>
         ) : null
       }
       <hr />

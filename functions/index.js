@@ -14,12 +14,16 @@ exports.createFeedbackGroup = functions.https.onRequest(async (request, response
     return response.status(204).send('');
   }
 
-  if (!request.body.data.password || !request.body.data.masterPassword) {
-    return response.status(400).send({ data: { error: 'please provide password and masterPassword' } });
+  if (!request.body.data.password || !request.body.data.repeatPassword) {
+    return response.status(400).send({ data: { error: 'please provide password and repeatPassword', key: 'empty' } });
+  }
+
+  if (request.body.data.password !== request.body.data.repeatPassword) {
+    return response.status(400).send({ data: { error: 'passwords should be the same', key: 'same' } })
   }
 
   const feedbackStore = new FeedbackStore(admin);
-  const newFeedbackGroup = new FeedbackGroup(request.body.data.password, request.body.data.masterPassword);
+  const newFeedbackGroup = new FeedbackGroup(request.body.data.password);
   const createdFeedbackGroup = await feedbackStore.create(newFeedbackGroup);
   return response.send({ data: createdFeedbackGroup.toJSON() });
 });
@@ -30,11 +34,11 @@ exports.findAnonymousFeedbackGroup = functions.https.onRequest(async (request, r
     return response.status(204).send('');
   }
 
-  if (!request.body.data.feedbackerId || !request.body.data.password) {
+  if (!request.body.data.feedbackerId) {
     return response.status(400).send({ data: { error: 'please provide feedbackerId and password' } });
   }
   const feedbackStore = new FeedbackStore(admin);
-  const feedbackGroup = await feedbackStore.findAnonymousFeedbackGroup(request.body.data.feedbackerId, request.body.data.password);
+  const feedbackGroup = await feedbackStore.findAnonymousFeedbackGroup(request.body.data.feedbackerId);
 
   if (feedbackGroup) {
     return response.send({ data: feedbackGroup.toJSON() });
@@ -49,14 +53,13 @@ exports.findMasterFeedbackGroup = functions.https.onRequest(async (request, resp
     return response.status(204).send('');
   }
 
-  if (!request.body.data.feedbackerId || !request.body.data.password || !request.body.data.masterPassword) {
-    return response.status(400).send({ data: { error: 'please provide feedbackerId, password and masterPassword' } });
+  if (!request.body.data.feedbackerId || !request.body.data.password) {
+    return response.status(400).send({ data: { error: 'please provide feedbackerId or password' } });
   }
   const feedbackStore = new FeedbackStore(admin);
   const feedbackGroup = await feedbackStore.findMasterFeedbackGroup(
     request.body.data.feedbackerId,
     request.body.data.password,
-    request.body.data.masterPassword,
   );
 
   if (feedbackGroup) {

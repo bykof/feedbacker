@@ -10,12 +10,11 @@ function JoinFeedbackGroupForm(props) {
   const [isMaster, setIsMaster] = useState(false);
   const [feedbackerId, setFeedbackerId] = useState('');
   const [password, setPassword] = useState('');
-  const [masterPassword, setMasterPassword] = useState('');
   const onSubmit = (event) => {
     if (isMaster) {
-      props.findMasterFeedbackGroup(feedbackerId, password, masterPassword);
+      props.findMasterFeedbackGroup(feedbackerId, password);
     } else {
-      props.findAnonymousFeedbackGroup(feedbackerId, password);
+      props.findAnonymousFeedbackGroup(feedbackerId);
     }
     event.preventDefault();
   }
@@ -24,11 +23,11 @@ function JoinFeedbackGroupForm(props) {
   }
 
   const isLoading = props.searchingAnonymousFeedbackGroup || props.searchingMasterFeedbackGroup;
-  const isError = props.anonymousFeedbackGroupError || props.masterFeedbackGroupError;
-  let renderedMasterPassword = null;
+  const isError = props.anonymousFeedbackGroupError || props.masterFeedbackGroupError;
+  let renderedPassword = null;
 
   if (isMaster) {
-    renderedMasterPassword = (
+    renderedPassword = (
       <div className="field has-addons">
         <div className="control is-expanded">
           <input
@@ -42,9 +41,9 @@ function JoinFeedbackGroupForm(props) {
                 },
               )
             }
-            placeholder="Master Password"
-            value={masterPassword}
-            onChange={(event) => setMasterPassword(event.target.value)}
+            placeholder="Password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
           />
         </div>
         {
@@ -66,39 +65,22 @@ function JoinFeedbackGroupForm(props) {
 
   return (
     <form onSubmit={onSubmit}>
-      <div className="field">
-        <input
-          type="text"
-          className={
-            classNames(
-              'input',
-              'is-medium',
-              {
-                'is-danger': isError
-              },
-            )
-          }
-          placeholder="Feedbacker ID"
-          value={feedbackerId}
-          onChange={(event) => setFeedbackerId(event.target.value)}
-        />
-      </div>
       <div className="field has-addons">
         <div className="control is-expanded">
           <input
-            type="password"
+            type="text"
             className={
               classNames(
                 'input',
                 'is-medium',
                 {
-                  'is-danger': isError,
+                  'is-danger': isError
                 },
               )
             }
-            placeholder="Password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
+            placeholder="Feedbacker ID"
+            value={feedbackerId}
+            onChange={(event) => setFeedbackerId(event.target.value)}
           />
         </div>
         {
@@ -115,7 +97,8 @@ function JoinFeedbackGroupForm(props) {
           ) : null
         }
       </div>
-      {renderedMasterPassword}
+      {renderedPassword}
+
       {
         isError ? (
           <p className="help is-danger">The Feedbacker ID or the password are wrong!</p>

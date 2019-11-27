@@ -8,12 +8,10 @@ module.exports = class FeedbackStore {
   toFeedbackGroup(id, feedbackGroupJSON) {
     return new FeedbackGroup(
       null,
-      null,
       feedbackGroupJSON.feedbacks,
       id,
       feedbackGroupJSON.feedbackerId,
       feedbackGroupJSON.hashedPassword,
-      feedbackGroupJSON.hashedMasterPassword,
     );
   }
 
@@ -43,7 +41,7 @@ module.exports = class FeedbackStore {
     }
   }
 
-  async findFeedbackGroup(feedbackerId, password) {
+  async findFeedbackGroup(feedbackerId) {
     let foundFeedbackGroup = null;
     const snapshot = await this.feedbackGroups.once('value')
     const feedbackGroupsJSON = snapshot.val();
@@ -51,24 +49,24 @@ module.exports = class FeedbackStore {
     for (const key in feedbackGroupsJSON) {
       const feedbackGroup = this.toFeedbackGroup(key, feedbackGroupsJSON[key]);
 
-      if (feedbackGroup.feedbackerId === feedbackerId && feedbackGroup.samePassword(password)) {
+      if (feedbackGroup.feedbackerId === feedbackerId) {
         foundFeedbackGroup = feedbackGroup;
       }
     }
     return foundFeedbackGroup;
   }
 
-  async findAnonymousFeedbackGroup(feedbackerId, password) {
-    const foundFeedbackGroup = await this.findFeedbackGroup(feedbackerId, password);
+  async findAnonymousFeedbackGroup(feedbackerId) {
+    const foundFeedbackGroup = await this.findFeedbackGroup(feedbackerId);
     if (foundFeedbackGroup) {
       return foundFeedbackGroup.toAnonymous();
     }
     return foundFeedbackGroup;
   }
 
-  async findMasterFeedbackGroup(feedbackerId, password, masterPassword) {
+  async findMasterFeedbackGroup(feedbackerId, password) {
     const foundFeedbackGroup = await this.findFeedbackGroup(feedbackerId, password);
-    if (foundFeedbackGroup && foundFeedbackGroup.sameMasterPassword(masterPassword)) {
+    if (foundFeedbackGroup) {
       return foundFeedbackGroup;
     }
   }

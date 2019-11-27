@@ -6,18 +6,15 @@ const Feedback = require('./Feedback');
 module.exports = class FeedbackGroup {
   constructor(
     password = null,
-    masterPassword = null,
     feedbacks = {},
     id = null,
     feedbackerId = null,
     hashedPassword = null,
-    hashedMasterPassword = null,
   ) {
     this.id = id
     this.feedbacks = this.mapFeedbacks(feedbacks);
     this.feedbackerId = feedbackerId ? feedbackerId : this.generateFeedbackerId();
     this.hashedPassword = password && password !== '' ? this.encrypt(password) : hashedPassword;
-    this.hashedMasterPassword = masterPassword && masterPassword !== '' ? this.encrypt(masterPassword) : hashedMasterPassword;
   }
 
   mapFeedbacks(feedbacks) {
@@ -43,10 +40,6 @@ module.exports = class FeedbackGroup {
     return this.hashedPassword === this.encrypt(password);
   }
 
-  sameMasterPassword(masterPassword) {
-    return this.hashedMasterPassword === this.encrypt(masterPassword);
-  }
-
   mapToFeedback(feedbackId, feedbackJson) {
     return new Feedback(
       feedbackId,
@@ -63,7 +56,6 @@ module.exports = class FeedbackGroup {
     const copiedFeedbackGroup = this.deepCopy();
     copiedFeedbackGroup.feedbacks = undefined;
     copiedFeedbackGroup.hashedPassword = undefined;
-    copiedFeedbackGroup.hashedMasterPassword = undefined;
     return copiedFeedbackGroup;
   }
 
@@ -72,7 +64,6 @@ module.exports = class FeedbackGroup {
       id: this.id,
       feedbackerId: this.feedbackerId,
       hashedPassword: this.hashedPassword,
-      hashedMasterPassword: this.hashedMasterPassword,
     };
 
     if (this.feedbacks) {

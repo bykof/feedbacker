@@ -12,7 +12,7 @@ function CreatedFeedbackGroup(props) {
           {props.createdFeedbackGroup.feedbackerId}
         </h1>
         <div className="notification is-info">
-          Please note this number and provide it to your Feedbackers with your password.<br />
+          Please note this number and provide it to your Feedbackers.<br />
         </div>
       </div>
     </div>

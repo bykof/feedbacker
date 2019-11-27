@@ -45,7 +45,6 @@ export default function (state = initialJoinFeedBackGroupState, action) {
       const findAnonymousFeedbackGroup = firebase.functions().httpsCallable('findAnonymousFeedbackGroup');
       findAnonymousFeedbackGroup({
         feedbackerId: action.payload.feedbackerId,
-        password: action.payload.password,
       }).then((response) => {
         store.dispatch(findAnonymousFeedbackGroupSuccess(response.data));
       }).catch((error) => {
@@ -67,7 +66,6 @@ export default function (state = initialJoinFeedBackGroupState, action) {
       findMasterFeedbackGroup({
         feedbackerId: action.payload.feedbackerId,
         password: action.payload.password,
-        masterPassword: action.payload.masterPassword,
       }).then((response) => {
         store.dispatch(findMasterFeedbackGroupSuccess(response.data));
       }).catch((error) => {
@@ -89,7 +87,7 @@ export default function (state = initialJoinFeedBackGroupState, action) {
       console.log(`Creating FeedbackGroup with: ${action.payload.password}, ${action.payload.masterPassword}`);
       createFeedbackGroup({
         password: action.payload.password,
-        masterPassword: action.payload.masterPassword,
+        repeatPassword: action.payload.repeatPassword,
       }).then((response) => {
         console.log('Got response: ', response.data);
         store.dispatch(createFeedbackGroupSuccess(response.data));

@@ -12,12 +12,9 @@ import {
   FIND_MASTER_FEEDBACK_GROUP_SUCCESS,
 } from "./actionTypes";
 
-export const findAnonymousFeedbackGroup = (feedbackerId, password) => ({
+export const findAnonymousFeedbackGroup = (feedbackerId) => ({
   type: FIND_ANONYMOUS_FEEDBACK_GROUP,
-  payload: {
-    feedbackerId,
-    password,
-  }
+  payload: { feedbackerId }
 });
 
 export const findAnonymousFeedbackGroupSuccess = feedbackGroup => ({
@@ -34,12 +31,11 @@ export const invalidateAnonymousFeedbackGroup = () => ({
   type: INVALIDATE_ANONYMOUS_FEEDBACK_GROUP,
 });
 
-export const findMasterFeedbackGroup = (feedbackerId, password, masterPassword) => ({
+export const findMasterFeedbackGroup = (feedbackerId, password) => ({
   type: FIND_MASTER_FEEDBACK_GROUP,
   payload: {
     feedbackerId,
     password,
-    masterPassword,
   }
 });
 
@@ -57,11 +53,11 @@ export const invalidateMasterFeedbackGroup = () => ({
   type: INVALIDATE_MASTER_FEEDBACK_GROUP,
 });
 
-export const createFeedbackGroup = (password, masterPassword) => ({
+export const createFeedbackGroup = (password, repeatPassword) => ({
   type: CREATE_FEEDBACK_GROUP,
   payload: {
     password,
-    masterPassword,
+    repeatPassword,
   }
 });
 
