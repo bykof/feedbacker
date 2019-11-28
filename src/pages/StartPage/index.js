@@ -17,17 +17,12 @@ function StartPage(props) {
           <JoinFeedbackGroupForm />
         </div>
       </div>
-      <div className="columns">
-        <div className="column">
-          <CreateFeedbackGroupLink />
-        </div>
-      </div>
     </div>
   );
 
   let redirectToFeedbackGroup;
   let redirectId;
-  if (props.anonymousFeedbackGroup) {
+  if (props.anonymousFeedbackGroup) {
     redirectId = props.anonymousFeedbackGroup.id;
   }
   if (props.masterFeedbackGroup) {
@@ -42,10 +37,16 @@ function StartPage(props) {
   return (
     <React.Fragment>
       <div className="columns">
-        <div className="column">
+        <div className="column has-text-centered">
           <h1 className="is-size-1">Feedbacker</h1>
         </div>
       </div>
+      <div className="columns">
+        <div className="column has-text-centered">
+          <CreateFeedbackGroupLink />
+        </div>
+      </div>
+      <hr />
       {joinOrCreate}
       {redirectToFeedbackGroup}
     </React.Fragment>

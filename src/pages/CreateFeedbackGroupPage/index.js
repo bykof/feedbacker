@@ -16,7 +16,7 @@ function CreateFeedbackGroupPage(props) {
         <div className="colummns">
           <div className="column">
             <h1 className="title">
-              Create a Feedback Group
+              Generate a Feedbacker ID
           </h1>
           </div>
         </div>
