@@ -65,6 +65,20 @@ function JoinFeedbackGroupForm(props) {
 
   return (
     <form onSubmit={onSubmit}>
+      <div class="tabs is-toggle is-toggle-rounded is-centered">
+        <ul>
+          <li class={classNames({'is-active': !isMaster})}>
+            <a onClick={() => {setIsMaster(false)}}>
+              <span>Create Feedback</span>
+            </a>
+          </li>
+          <li class={classNames({'is-active': isMaster})}>
+            <a onClick={() => {setIsMaster(true)}}>
+              <span>Receive Feedbacks</span>
+            </a>
+          </li>
+        </ul>
+      </div>
       <div className="field has-addons">
         <div className="control is-expanded">
           <input
@@ -104,10 +118,6 @@ function JoinFeedbackGroupForm(props) {
           <p className="help is-danger">The Feedbacker ID or the password are wrong!</p>
         ) : null
       }
-      <div className="field">
-        <input id="isMaster" type="checkbox" className="switch is-rounded" checked={isMaster} onChange={toggleIsMaster} />
-        <label htmlFor="isMaster">receive feedbacks</label>
-      </div>
     </form>
   );
 }
