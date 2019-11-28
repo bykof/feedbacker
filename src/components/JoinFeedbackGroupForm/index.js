@@ -82,7 +82,7 @@ function JoinFeedbackGroupForm(props) {
       <div className="field has-addons">
         <div className="control is-expanded">
           <input
-            type="text"
+            type="number"
             className={
               classNames(
                 'input',
