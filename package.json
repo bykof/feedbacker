@@ -7,7 +7,7 @@
     "bulma-switch": "^2.0.0",
     "classnames": "^2.2.6",
     "firebase": "^7.2.1",
-    "node-sass": "^4.12.0",
+    "node-sass": "^4.13.1",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-redux": "^7.1.1",
